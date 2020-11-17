@@ -1,0 +1,172 @@
+<head>
+    <title>Anime Staff Matcher</title>
+    <link rel = "stylesheet" type = "text/css" href = "./main.css">
+    <link rel="icon" type="image/png" href="./favicon.png"/>
+
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+
+    <script>
+        //selected anime var
+        var animeTitles = ["", ""];
+        var animeIDs = [-1, -1];
+
+        //search for anime
+        async function search() {
+            searchTerm = document.getElementById("search").value;
+
+            response = await fetch("https://api.jikan.moe/v3/search/anime?q=" + searchTerm);
+
+            data = await response.json();
+
+            console.log(data);
+
+            searchResults = document.getElementById("searchResults");
+            searchResults.innerHTML = "";
+            for (i = 0; i < 5; i++) {
+                anime = data["results"][i];
+                console.log(anime["title"]);
+
+                var newli = document.createElement("li");
+                newli.innerHTML = anime["title"];
+                newli.setAttribute("onclick", 'select("' + anime["title"] + '", ' + anime["mal_id"] + ');');
+                searchResults.appendChild(newli);
+            }
+
+        }
+
+        //select one of the search results
+        function select(title, id) {
+            console.log(id);
+
+            if ((animeIDs[0] == -1 || animeIDs[1] == -1)) { //if either is not set
+                if (animeIDs[0] == -1) { //if no a then set a
+                    animeTitles[0] = title;
+                    animeIDs[0] = id;
+                } else { // else set b
+                    animeTitles[1] = title;
+                    animeIDs[1] = id;
+                }
+
+                //clear search results
+                document.getElementById("searchResults").innerHTML = "";
+                updateSelection();
+            }
+        }
+
+        //deselect a selected anime
+        function deselect(anime) {
+            animeIDs[anime] = -1;
+            animeTitles[anime] = "";
+
+            updateSelection();
+        }
+
+        //update selected anime display
+        function updateSelection() {
+            animeA = document.getElementById("animeA");
+            animeB = document.getElementById("animeB");
+            ampersand = document.getElementById("ampersand");
+
+            if (animeIDs[0] > -1) { //if a set then display a
+                animeA.innerHTML = animeTitles[0];
+            } else {
+                animeA.innerHTML = "";
+            }
+
+            if (animeIDs[1] > -1) { //if b set then display b
+                animeB.innerHTML = animeTitles[1];
+            } else {
+                animeB.innerHTML = "";
+            }
+
+            if (animeIDs[0] > -1 && animeIDs[1] > -1) { //if both set then show &
+                ampersand.innerHTML = "&";
+            } else {
+                ampersand.innerHTML = "";
+            }
+        }
+
+        async function run() {
+            //check anime are selected
+            if (animeIDs[0] < 0 || animeIDs[1] < 0) {
+                alert("You must select two anime.");
+                return;
+            }
+
+            //get data
+            document.getElementById("output").innerHTML = "";
+            responseA = await fetch("https://api.jikan.moe/v3/anime/" + animeIDs[0] + "/characters_staff");
+            responseB = await fetch("https://api.jikan.moe/v3/anime/" + animeIDs[1] + "/characters_staff");
+            dataA = await responseA.json();
+            dataB = await responseB.json();
+            staffA = dataA["staff"];
+            staffB = dataB["staff"];
+
+            //setup output table
+            out = document.createElement("table");
+            out.innerHTML = '<tr><th id="RoleHeaderA"></th><th>Staff</th><th id="RoleHeaderB"></th></tr>';
+
+            //populate table
+            num = 0;
+            for (a in staffA) {
+                for (b in staffB) {
+                    if (staffA[a]["mal_id"] == staffB[b]["mal_id"]) {
+                        console.log(staffA[a]["name"] + " vs " + staffB[b]["name"]);
+                        num++;
+
+                        //get positions strings
+                        var posA = "";
+                        var posB = "";
+                        for (pos in staffA[a]["positions"]) {
+                            posA = posA + staffA[a]["positions"][pos] + "<br>";
+                        }
+                        for (pos in staffB[b]["positions"]) {
+                            posB = posB + staffB[b]["positions"][pos] + "<br>";
+                        }
+
+                        //create new row for staff
+                        newtr = document.createElement("tr");
+                        newtr.innerHTML = '<td class="roleA">' + posA + '</td><td class="staffName"><a href="https://myanimelist.net/people/' + staffA[a]["mal_id"] + '">' + staffA[a]["name"] + '</a></td><td class="roleB">' + posB + '</td>';
+                        out.appendChild(newtr);
+                    }
+                }
+            }
+            console.log(num);
+
+            if (num > 0) { //show table and set column titles
+                document.getElementById("output").appendChild(out);
+                document.getElementById("RoleHeaderA").innerHTML = "In " + animeTitles[0];
+                document.getElementById("RoleHeaderB").innerHTML = "In " + animeTitles[1];
+            } else {
+                document.getElementById("output").innerHTML = "There are no staff that worked on both of these anime."
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1><a href=".">Anime Staff Matcher</a></h1>
+    Find the overlapping staff from two anime using MAL's database.<br>
+    Built by <a href="http://iklone.org">iklone</a>.
+
+    <div id="form">
+        <label for="search">Search for anime by title:</label>
+        <input type="text" id="search" name="search">
+        <button id="searchButton" onclick='search();'>Search</button>
+        <ul id="searchResults"></ul>
+        <hr>
+
+        <div id="selector">
+            <div class="select" id="animeA" onclick="deselect(0);"></div>
+            <div id="ampersand"></div>
+            <div class="select" id="animeB" onclick="deselect(1);"></div>
+        </div>
+
+        <button id="genButton" onclick='run();'>Search</button>
+
+    </div>
+
+    <div id="output"></div>
+
+    <img id="mahoro" src="./mahoro.png">
+</body>

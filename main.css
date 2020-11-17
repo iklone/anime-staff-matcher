@@ -1,0 +1,140 @@
+body {
+    background-color: black;
+    color: white;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+h1 a {
+    text-decoration: none;
+}
+
+a {
+    color: white;
+    cursor: pointer;
+}
+
+a:hover {
+    color: lightgray;
+}
+
+#canvas {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5px;
+    height: 95%;
+}
+
+#form {
+    border: 1px solid white;
+    background-color: black;
+    padding: 10px;
+    margin: 10px;
+    width: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+#form input {
+    width: 85%;
+}
+
+#form button {
+    width: 10%;
+}
+
+#form #selector {
+    text-align: center;
+}
+
+#form #selector .select {
+    font-size: 30;
+}
+
+#form #selector .select:hover {
+    text-decoration: line-through;
+    cursor: pointer;
+}
+
+#searchResults li:hover {
+    cursor: pointer;
+    font-style: italic;
+}
+
+#genButton {
+    margin-top: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.centreText {
+    text-align: center;
+}
+
+#output {
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+#mahoro {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 30%;
+    z-index: -1;
+}
+
+input, select, button {
+    margin-bottom: 10px;
+    border: 1px solid black;
+    padding: 5px 10px;
+    font-size: 16px;
+    background-color: white;
+    color: black;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: gray;
+    cursor: default;
+}
+
+#advancedOptions {
+    border: 1px solid white;
+    padding: 10px;
+}
+
+.wipFeatures {
+    display: none;
+}
+
+table {
+    border-collapse: collapse;
+    margin: auto;
+    background-color: black;
+}
+
+td, th {
+    border: 1px solid white;
+    padding: 8px;
+}
+
+.roleA {
+    text-align: right;
+}
+
+.roleB {
+    text-align: left;
+}
+
+.staffName {
+    text-align: center;
+}
