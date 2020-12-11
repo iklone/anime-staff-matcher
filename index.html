@@ -180,6 +180,13 @@
             } else {
                 document.getElementById("output").innerHTML = "There are no staff that worked on both of these anime."
             }
+
+            //show share link
+            shareDIV = document.createElement("div");
+            shareDIV.setAttribute("id", "shareDIV");
+            GETstring = '?first=' + animeIDs[0] + '&second=' + animeIDs[1];
+            shareDIV.innerHTML = 'Share this result with: <a href="http://staff.iklone.org' + GETstring + '">staff.iklone.org' + GETstring + "</a>";
+            document.getElementById("output").appendChild(shareDIV);
         }
     </script>
 </head>
