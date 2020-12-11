@@ -43,7 +43,7 @@ a:hover {
 }
 
 #form button {
-    width: 10%;
+    width: fit-content
 }
 
 #form #selector {
@@ -137,4 +137,8 @@ td, th {
 
 .staffName {
     text-align: center;
+}
+
+#shareDIV {
+    margin-top: 1%;
 }
